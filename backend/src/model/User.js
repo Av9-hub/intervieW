@@ -22,3 +22,5 @@ const userSchema=new mongoose.Schema({
 
 },
 {timestamps:true})//createdAt,updatedAt
+
+export const User=mongoose.model("User",userSchema);
