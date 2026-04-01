@@ -6,16 +6,16 @@ const userSchema=new mongoose.Schema({
         required:true,
     },
     email:{
-        type:"String",
+        type:String,
         required:true,
         unique:true
     },
     imageUrl:{
-        type:"String",
+        type:String,
         default:""
     },
     clerkId:{
-        type:"String",
+        type:String,
         required:true,
         unique:true,
     }
@@ -23,4 +23,6 @@ const userSchema=new mongoose.Schema({
 },
 {timestamps:true})//createdAt,updatedAt
 
-export const User=mongoose.model("User",userSchema);
+const User=mongoose.model("User",userSchema);
+
+export default User;
