@@ -25,7 +25,7 @@ const syncUser=inngest.createFunction(
 )
 
 const deleteUserFromDB=inngest.createFunction(
-    {id:"delete-user-from-db"},
+    {id:"delete-user-from-db-v2"},
     {event:"clerk/user.deleted"},
     async ({event})=>{
         await connectDb();
