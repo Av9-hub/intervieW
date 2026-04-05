@@ -5,26 +5,30 @@ import { connectDb } from "./lib/connection.js";
 import {serve} from "inngest/express"
 import { inngest ,functions} from "./lib/inngest.js";
 import cors from "cors"
+import {clerkMiddleware} from '@clerk/express'
+import { protectRoute } from "./middlewares/protectRoute.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 const app=express();
 
 const __dirname=path.resolve();
 
-//middleware
-app.use(express.json());
-
 //credentials:true meansing??=> server allows a browser to include cookies on request
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true}));
 
+//middleware
+app.use(express.json());
+app.use(clerkMiddleware()); //This adds auth field to request object: req.auth()
+
+
 app.use("/api/inngest",serve({client:inngest,functions}))
 
+app.use("/api/chat",chatRoutes)
 app.get("/health",(req,res)=>{
     res.status(200).json({msg:"success from backend... heath"})
 })
 
-app.get("/books",(req,res)=>{
-    res.status(200).json({msg:"api is running books"})
-})
+
 
 if(ENV.NODE_ENV==="production"){
     app.use(express.static(path.join(__dirname,"../frontend/dist")));
