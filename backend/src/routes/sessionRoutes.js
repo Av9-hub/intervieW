@@ -1,9 +1,9 @@
 import express from 'express'
 import { protectRoute } from '../middlewares/protectRoute.js';
-import { createSessions,getActiveSessions,getMyRecentSessions,getSessionById,joinSession,endSession } from '../controllers/sessionController.js';
+import { createSession,getActiveSessions,getMyRecentSessions,getSessionById,joinSession,endSession } from '../controllers/sessionController.js';
 const router=express.Router();
 
-router.post("/",protectRoute,createSessions);
+router.post("/",protectRoute,createSession);
 router.get("/active",protectRoute,getActiveSessions);
 router.get("/recentSessions",protectRoute,getMyRecentSessions)
 router.get("/:id",protectRoute,getSessionById);

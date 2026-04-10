@@ -1,4 +1,4 @@
-import { Session } from "@clerk/express";
+import { Session } from "../model/Session.js";
 import { streamClient,chatClient } from '../lib/stream.js';
 
 export async function createSession (req,res){
@@ -25,7 +25,7 @@ export async function createSession (req,res){
     }
 
      //create a stream video call 
-    await streamClient.video.call("default",call).getOrCreate({
+    await streamClient.video.call("default",callId).getOrCreate({
         data:{
             created_by_id:clerkId,
             custom:{
@@ -55,7 +55,7 @@ catch(error){
 
 export async function getActiveSessions(req,res){
     try{
-    const session=await session.find({status:active})
+    const session=await session.find({status:"active"})
     .populate("host","name imageUrl email clerkId")
     .sort({createdAt:-1})
     .limit(20)
@@ -92,7 +92,10 @@ export async function getSessionById(req,res){
     .populate("host","name imageUrl email clerkId")
     .sort({createdAt:-1})
     .limit(20)
+
+    return res.status(200).json(session);
     }
+    
     catch(error){
         console.log("Error in getSessionById",error.message);
         res.status(500).json({message:"Internal server error"});
@@ -115,7 +118,7 @@ export async function joinSession(req,res){
         return res.status(402).json({message:"Host can't join as participant "});
     }
     if(session.participants){
-        return res.status(402).json({message:"Already joined by participants."})
+        return res.status(409).json({message:"Already joined by participants."})
     }
     session.participants=userId;
     await session.save();
